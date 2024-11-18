@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
+import csv
 
 
 # Set up Chrome options
@@ -34,35 +35,49 @@ for link in links:
 #specify desired years
 years=[x for x in range(1950, 2024)]    #(2023 is last year included)
 
-#Loop through each link, open it, and extract data
-for link in links:
-    href = link.get_attribute('href')
-    if href and ('asndb/year' in href) and any(str(year) in href for year in years):    #ensure the link is valid   ()
-        print(f"Visiting {href}")
+# Open a CSV file in write mode to save the data
+with open('avi_data.csv', mode='w', newline='', encoding='utf-8') as file:
+    writer = csv.writer(file)
+    # Write headers to CSV (modify based on your data)
+    writer.writerow(['acc. date', 'type', 'reg.', 'operator', 'fat.', 'location', 'dmg'])  # Adjust columns based on what you're collecting
 
-        # Open the link
-        driver.get(href)  #ex. https://asn.flightsafety.org/database/year/1950/1
+    #Loop through each link, open it, and extract data
+    for link in links:
+        href = link.get_attribute('href')
+        if href and ('asndb/year' in href) and any(str(year) in href for year in years):    #ensure the link is valid   ()
+            print(f"Visiting {href}")
 
-        # Give time for the page to load, if necessary
-        driver.implicitly_wait(5)  # Wait up to 5 seconds for elements to load
+            # Open the link
+            driver.get(href)  #ex. https://asn.flightsafety.org/database/year/1950/1
 
-        # Now you can extract the page's HTML using BeautifulSoup
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
+            # Give time for the page to load, if necessary
+            driver.implicitly_wait(5)  # Wait up to 5 seconds for elements to load
 
-        # Extract the table and its rows
-        table = soup.find('table', {'class': 'hp'})
-        rows = []
-        for tr in table.find_all('tr')[1:]:
-            cells = tr.find_all('td')
-            row = [cell.get_text(strip=True) for cell in cells]
-            if row:
-                rows.append(row)
+            # Now you can extract the page's HTML using BeautifulSoup
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        print(rows)
+            # Extract the table and its rows
+            table = soup.find('table', {'class': 'hp'})
+            rows = []
+            for tr in table.find_all('tr')[1:]:
+                cells = tr.find_all('td')
+                row = [cell.get_text(strip=True) for cell in cells]
+                if row:
+                    rows.append(row)
 
-        #Go back to the main page to continue to the next link
-        driver.back()
-        driver.implicitly_wait(5)
+            #write the rows of data to csv file
+            for row in rows:
+                writer.writerow(row)
+
+            #output
+            #print(rows)
+
+            #Go back to the main page to continue to the next link
+            driver.back()
+            driver.implicitly_wait(5)
 
 # Don't forget to close the WebDriver
 driver.quit()
+
+#exit message
+print("Scraping complete. Data saved to 'avi_data.csv'.")
