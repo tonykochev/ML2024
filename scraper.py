@@ -17,24 +17,36 @@ service = Service('webdriver/chromedriver.exe')
 driver = webdriver.Chrome(service=service, options=options)
 
 # Open the URL
-driver.get("https://asn.flightsafety.org/database/year/1950/1")
+driver.get("https://asn.flightsafety.org/wikibase/")
 
-# Give time for the page to load, if necessary
-driver.implicitly_wait(5)  # Wait up to 5 seconds for elements to load
+#Find all hyperlinks on the page
+links = driver.find_elements(By.TAG_NAME, 'a')
 
-# Now you can extract the page's HTML using BeautifulSoup
-soup = BeautifulSoup(driver.page_source, 'html.parser')
+#Loop through each link, open it, and extract data
+for link in links:
+    href = link.get_attribute('href')
+    if href:    #ensure the link is valid   ()
+        print(f"Visiting {href}")
 
-# Extract the table and its rows
-table = soup.find('table', {'class': 'hp'})
-rows = []
-for tr in table.find_all('tr')[1:]:
-    cells = tr.find_all('td')
-    row = [cell.get_text(strip=True) for cell in cells]
-    if row:
-        rows.append(row)
+    # Open the link
+    driver.get(href)  #ex. https://asn.flightsafety.org/database/year/1950/1
 
-print(rows)
+    # Give time for the page to load, if necessary
+    driver.implicitly_wait(5)  # Wait up to 5 seconds for elements to load
+
+    # Now you can extract the page's HTML using BeautifulSoup
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+
+    # Extract the table and its rows
+    table = soup.find('table', {'class': 'hp'})
+    rows = []
+    for tr in table.find_all('tr')[1:]:
+        cells = tr.find_all('td')
+        row = [cell.get_text(strip=True) for cell in cells]
+        if row:
+            rows.append(row)
+
+    print(rows)
 
 # Don't forget to close the WebDriver
 driver.quit()
