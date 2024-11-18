@@ -3,3 +3,10 @@
 
 #weather data source: https://www.ncei.noaa.gov/monitoring
 #aviation data source: https://asn.flightsafety.org/database/
+
+#goal: relate weather conditions to fatalities
+
+#aviation relevant data attributes: acc. date, fat., location
+#other attributes?: type - can either manually use this or make type an attribute
+
+#
