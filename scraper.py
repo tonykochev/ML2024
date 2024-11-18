@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 # Set up Chrome options
 options = Options()
-options.add_argument("--headless")  # Run in headless mode (no UI) #error i had to automate, with ui. 
+#options.add_argument("--headless")  # Run in headless mode (no UI) #error i had to automate, with ui. 
 options.add_argument("--disable-gpu")
 
 # Path to your ChromeDriver (make sure it's installed and correctly set up)
@@ -19,8 +19,17 @@ driver = webdriver.Chrome(service=service, options=options)
 # Open the URL
 driver.get("https://asn.flightsafety.org/wikibase/")
 
+# Give time for the page to load, if necessary
+driver.implicitly_wait(5)  # Wait up to 5 seconds for elements to load
+
+# Now you can extract the page's HTML using BeautifulSoup
+soup = BeautifulSoup(driver.page_source, 'html.parser')
+
 #Find all hyperlinks on the page
 links = driver.find_elements(By.TAG_NAME, 'a')
+
+for link in links:
+    print(link.get_attribute('href'))
 
 #specify desired years
 years=[x for x in range(1950, 2024)]    #(2023 is last year included)
@@ -28,7 +37,7 @@ years=[x for x in range(1950, 2024)]    #(2023 is last year included)
 #Loop through each link, open it, and extract data
 for link in links:
     href = link.get_attribute('href')
-    if href and ('asndb/year' in href) and (str(year) in href for year in years):    #ensure the link is valid   ()
+    if href and ('asndb/year' in href) and any(str(year) in href for year in years):    #ensure the link is valid   ()
         print(f"Visiting {href}")
 
         # Open the link
@@ -50,6 +59,10 @@ for link in links:
                 rows.append(row)
 
         print(rows)
+
+        #Go back to the main page to continue to the next link
+        driver.back()
+        driver.implicitly_wait(5)
 
 # Don't forget to close the WebDriver
 driver.quit()
