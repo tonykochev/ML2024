@@ -22,31 +22,34 @@ driver.get("https://asn.flightsafety.org/wikibase/")
 #Find all hyperlinks on the page
 links = driver.find_elements(By.TAG_NAME, 'a')
 
+#specify desired years
+years=[x for x in range(1950, 2024)]    #(2023 is last year included)
+
 #Loop through each link, open it, and extract data
 for link in links:
     href = link.get_attribute('href')
-    if href:    #ensure the link is valid   ()
+    if href and ('asndb/year' in href) and (str(year) in href for year in years):    #ensure the link is valid   ()
         print(f"Visiting {href}")
 
-    # Open the link
-    driver.get(href)  #ex. https://asn.flightsafety.org/database/year/1950/1
+        # Open the link
+        driver.get(href)  #ex. https://asn.flightsafety.org/database/year/1950/1
 
-    # Give time for the page to load, if necessary
-    driver.implicitly_wait(5)  # Wait up to 5 seconds for elements to load
+        # Give time for the page to load, if necessary
+        driver.implicitly_wait(5)  # Wait up to 5 seconds for elements to load
 
-    # Now you can extract the page's HTML using BeautifulSoup
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
+        # Now you can extract the page's HTML using BeautifulSoup
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-    # Extract the table and its rows
-    table = soup.find('table', {'class': 'hp'})
-    rows = []
-    for tr in table.find_all('tr')[1:]:
-        cells = tr.find_all('td')
-        row = [cell.get_text(strip=True) for cell in cells]
-        if row:
-            rows.append(row)
+        # Extract the table and its rows
+        table = soup.find('table', {'class': 'hp'})
+        rows = []
+        for tr in table.find_all('tr')[1:]:
+            cells = tr.find_all('td')
+            row = [cell.get_text(strip=True) for cell in cells]
+            if row:
+                rows.append(row)
 
-    print(rows)
+        print(rows)
 
 # Don't forget to close the WebDriver
 driver.quit()
