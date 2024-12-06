@@ -62,7 +62,7 @@ with open('avi_data.csv', mode='w', newline='', encoding='utf-8') as file:
             for tr in table.find_all('tr')[1:]:
                 cells = tr.find_all('td')
                 row = [cell.get_text(strip=True) for cell in cells]
-                if row:
+                if row:                                                                 #check if row has () and 3 char string within
                     rows.append(row)
 
             #write the rows of data to csv file
@@ -81,3 +81,59 @@ driver.quit()
 
 #exit message
 print("Scraping complete. Data saved to 'avi_data.csv'.")
+
+#histogram for crashes by year
+#geocoding find long and lat from name
+#parse use the area codes CDU, SVX
+#codes first (they are all airport codes)
+
+#search tool
+#city
+#add to cart
+#view cart download to csv
+
+#weather api
+#cut non-code ones out
+#between 3 people we can each make 1000 API calls
+#be careful may be 3 separate calls to get long lat and then weather
+#obtain airport coordinates from airport codes
+
+#https://www.partow.net/miscellaneous/airportdatabase/index.html#Downloads
+#last 2 numbers are important
+
+#Tony
+#openweather api can input long and lat for - https://openweathermap.org/
+#Yash
+#can get long and lat from codes from https://www.partow.net/miscellaneous/airportdatabase/index.html#Downloads
+
+""" import requests
+import pandas as pd
+
+API_KEY = 'your_api_key_here'
+CITY = 'San Francisco'
+DATE = '2023-12-01'
+
+# Step 1: Get latitude and longitude for the city
+geo_url = f'http://api.openweathermap.org/geo/1.0/direct?q={CITY}&appid={API_KEY}'
+geo_response = requests.get(geo_url).json()
+latitude = geo_response[0]['lat']
+longitude = geo_response[0]['lon']
+
+# Step 2: Convert date to UNIX timestamp
+timestamp = int(pd.Timestamp(DATE).timestamp())
+
+# Step 3: Fetch historical weather data
+weather_url = f'https://api.openweathermap.org/data/2.5/onecall/timemachine?lat={latitude}&lon={longitude}&dt={timestamp}&appid={API_KEY}'
+weather_response = requests.get(weather_url).json()
+
+# Display the data
+print(weather_response) """
+
+#remove ones with no 3 letter code
+#remove all 0's in airport data
+#final product for airport data should look like screenshot
+#use that and time to get weather data
+#then can attach the information from api to crash history
+
+#present project next tuesday night (do not have to be there)
+#if cannot make it to presentation ask another groupmate to present - one presentation per group
