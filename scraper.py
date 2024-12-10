@@ -102,7 +102,7 @@ print("Scraping complete. Data saved to 'avi_data.csv'.")
 #last 2 numbers are important
 
 #Tony
-#openweather api can input long and lat for - https://openweathermap.org/
+#openweather api can get input long and lat for - https://openweathermap.org/
 #Yash
 #can get long and lat from codes from https://www.partow.net/miscellaneous/airportdatabase/index.html#Downloads
 
