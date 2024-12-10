@@ -30,6 +30,12 @@ ON weather_data.* TO admin@localhost
 ALTER TABLE weather
 MODIFY COLUMN date YEAR;
 
+GRANT DROP ON weather_data.* TO admin@localhost;
+
+GRANT CREATE ON weather_data.* TO admin@localhost;
+
+GRANT ALL PRIVILEGES ON weather_data.* TO admin@localhost;
+
 /* 
 - GHCN: Global Historical Climatology Network - Daily dataset
 - "STATION" = GHCN ID
