@@ -3,6 +3,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import joblib
+import os
+
+#Enter the right directory to run the program
+print(os.getcwd())
+os.chdir('ML2024')
+print(os.getcwd())
+
 
 # Load the dataset
 data = pd.read_csv("weather_flights.csv")
