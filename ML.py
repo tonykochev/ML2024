@@ -10,7 +10,6 @@ print(os.getcwd())
 os.chdir('ML2024')
 print(os.getcwd())
 
-
 # Load the dataset
 data = pd.read_csv("weather_flights.csv")
 
@@ -50,3 +49,30 @@ print("Model saved as flight_accident_predictor.pkl")
 
 # Example of loading the model (optional)
 # loaded_model = joblib.load("flight_accident_predictor.pkl")
+
+# Predict severity of flying in weather
+import numpy as np
+
+# Load the trained model (if already saved)
+model = joblib.load('flight_accident_predictor.pkl')
+
+def test(DP1X, EMXP, PRCP):
+    # New input data for prediction
+    new_input_df = pd.DataFrame([[DP1X, EMXP, PRCP]], columns=['DP1X', 'EMXP', 'PRCP'])
+
+    # Make a prediction
+    prediction = model.predict(new_input_df)
+
+    # Output the predicted class
+    print(f"Predicted class: {prediction[0]}")
+
+    #Output description
+    if prediction[0] == 0:
+        print(f"It is predicted that a crash would be non-fatal given these conditions: DP1X={DP1X} EMXP={EMXP} PRCP={PRCP}\n")
+    else:
+        print(f"It is predicted that a crash would be fatal given these conditions: DP1X={DP1X} EMXP={EMXP} PRCP={PRCP}\n")
+
+# New input data for prediction ex. (VCA incident with 0 fatalities)
+test(DP1X=20.0, EMXP=106.7, PRCP=1813.4)
+# New input data for prediction ex. (ARN incident with 5 fatalities) 0, 24, 397.1
+test(DP1X=0, EMXP=24, PRCP=397.1)
